@@ -10,6 +10,7 @@
     "postgraphile"
   ],
   "dependencies": {
+    "graphile-utils": "^4.9.2",
     "postgraphile": "^4.5.5",
     "postgraphile-plugin-connection-filter": "^1.1.3"
   }
