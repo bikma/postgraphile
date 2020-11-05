@@ -1,4 +1,5 @@
-const http = require("http")
+const express = require("express")
+const cors = require("cors")
 const { postgraphile } = require("postgraphile")
 const { makeExtendSchemaPlugin, gql } = require("graphile-utils")
 
@@ -7,7 +8,7 @@ const DATABASE_URL =
   process.env.DATABASE_URL ||
   "postgres://ubikma%40bikma:Abcabc123@bikma.postgres.database.azure.com:5432/dbbikma"
 
-const MyRandomUserPlugin = makeExtendSchemaPlugin((build) => {
+const TestPlugin = makeExtendSchemaPlugin((build) => {
   const { pgSql: sql } = build
   return {
     typeDefs: gql`
@@ -24,17 +25,18 @@ const MyRandomUserPlugin = makeExtendSchemaPlugin((build) => {
     },
   }
 })
-// enableCors: Enables some generous CORS settings for the GraphQL endpoint. There are some costs associated when enabling this, if at all possible try to put your API behind a reverse proxy.
-http
-  .createServer(
-    postgraphile(DATABASE_URL, "public", {
-      watchPg: true,
-      graphiql: true,
-      enhanceGraphiql: true,
-      appendPlugins: [MyRandomUserPlugin],
-      enableCors: true,
-    })
-  )
-  .listen(PORT, () => {
-    console.log(`postgraphile is running on port ${PORT}! # ` + Date())
+const app = express()
+app.use(cors())
+app.use(
+  postgraphile(DATABASE_URL, "public", {
+    watchPg: true,
+    graphiql: true,
+    enhanceGraphiql: true,
+    appendPlugins: [TestPlugin],
+    enableCors: true,
   })
+)
+
+app.listen(PORT, () =>
+  console.log(`postgraphile is running on port ${PORT}! # ` + Date())
+)
