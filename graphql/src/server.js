@@ -24,7 +24,7 @@ const MyRandomUserPlugin = makeExtendSchemaPlugin((build) => {
     },
   }
 })
-
+// enableCors: Enables some generous CORS settings for the GraphQL endpoint. There are some costs associated when enabling this, if at all possible try to put your API behind a reverse proxy.
 http
   .createServer(
     postgraphile(DATABASE_URL, "public", {
@@ -32,6 +32,7 @@ http
       graphiql: true,
       enhanceGraphiql: true,
       appendPlugins: [MyRandomUserPlugin],
+      enableCors: true,
     })
   )
   .listen(PORT, () => {
